@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">RedmindMe</string>
+    <string name="app_name">RedmindMeBeta</string>
+    <string name="search_title">Search</string>
 </resources>
