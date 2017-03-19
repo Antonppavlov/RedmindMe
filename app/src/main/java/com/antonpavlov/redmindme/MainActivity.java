@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.antonpavlov.redmindme.adapter.TabsPagerFragmentAdapter;
+import com.antonpavlov.redmindme.adapter.TabsFragmentAdapter;
 import com.antonpavlov.redmindme.utils.Constant;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initTabLayout() {
+    private void  initTabLayout() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-        TabsPagerFragmentAdapter tabsAdapter = new TabsPagerFragmentAdapter(getSupportFragmentManager());
+        TabsFragmentAdapter tabsAdapter = new TabsFragmentAdapter(getApplicationContext(),getSupportFragmentManager());
         viewPager.setAdapter(tabsAdapter);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);

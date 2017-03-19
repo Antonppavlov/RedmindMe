@@ -8,4 +8,8 @@
     <string name="reference">Справка</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="history">History</string>
+    <string name="ideas">Ideas</string>
+    <string name="bitrhdays">Birthdays</string>
+    <string name="todo">To do</string>
 </resources>
