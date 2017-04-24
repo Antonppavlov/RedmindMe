@@ -8,15 +8,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.antonpavlov.redmindme.R;
-import com.antonpavlov.redmindme.dto.RemindDTO;
 
 import java.util.List;
 
+import ru.trancletor.www.yandex.object.Word;
+
 public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.RemindViewHolder> {
 
-    private List<RemindDTO> remindDTOList;
+    private  List<Word>  remindDTOList;
 
-    public RemindListAdapter(List<RemindDTO> remindDTOList) {
+    public RemindListAdapter( List<Word>  remindDTOList) {
+        this.remindDTOList = remindDTOList;
+    }
+
+    public void setRemindDTOList(List<Word> remindDTOList) {
         this.remindDTOList = remindDTOList;
     }
 
@@ -24,16 +29,17 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
     public RemindViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View inflate = layoutInflater.inflate(R.layout.remind_item, parent, false);
-
         return new RemindViewHolder(inflate);
     }
 
     @Override
     public void onBindViewHolder(RemindViewHolder holder, int position) {
-        RemindDTO data = remindDTOList.get(position);
+        Word data = remindDTOList.get(position);
 
-        holder.textView.setText(data.getTitle());
-        holder.textDescription.setText(data.getDescription());
+        holder.text.setText(data.getText());
+        holder.textTranslator.setText(data.getTranslatorText());
+        holder.codeLanguageFrom .setText(data.getCodeLanguageFrom());
+        holder.codeLanguageTo.setText(data.getCodeLanguageTo());
     }
 
     @Override
@@ -42,18 +48,22 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
     }
 
 
-
-
     public static class RemindViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        TextView textView;
-        TextView textDescription;
+        TextView text;
+        TextView textTranslator;
+        TextView codeLanguageFrom;
+        TextView codeLanguageTo;
 
         public RemindViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
-            textView = (TextView) itemView.findViewById(R.id.itemTextViewTitle);
-            textDescription = (TextView) itemView.findViewById(R.id.textDescription);
+
+            text = (TextView) itemView.findViewById(R.id.itemTextViewTitle);
+            textTranslator = (TextView) itemView.findViewById(R.id.textDescription);
+
+            codeLanguageFrom = (TextView) itemView.findViewById(R.id.codeLanguageFrom);
+            codeLanguageTo = (TextView) itemView.findViewById(R.id.codeLanguageTo);
         }
     }
 }

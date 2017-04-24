@@ -2,19 +2,19 @@ package com.antonpavlov.redmindme.fragment;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.antonpavlov.redmindme.R;
 import com.antonpavlov.redmindme.adapter.SpinnerAdapter;
@@ -22,6 +22,15 @@ import com.antonpavlov.redmindme.fragment.abstact.AbstractTabFragment;
 import com.antonpavlov.redmindme.yandex.ApiKeys;
 import com.antonpavlov.redmindme.yandex.language.Language;
 import com.antonpavlov.redmindme.yandex.translate.Translate;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import ru.trancletor.www.yandex.dao.WordDAO;
+import ru.trancletor.www.yandex.database.Initializer;
+import ru.trancletor.www.yandex.object.Word;
+
+import static com.antonpavlov.redmindme.fragment.FavoritesFragment.wordList;
 
 public class TranslatorFragment extends AbstractTabFragment {
 
@@ -34,6 +43,8 @@ public class TranslatorFragment extends AbstractTabFragment {
 
     private TextView translatedText;
     private EditText inputField;
+
+    private CheckBox checkBox;
 
 
     private static TranslatorFragment translatorFragment;
@@ -59,24 +70,14 @@ public class TranslatorFragment extends AbstractTabFragment {
 
         spinner1.setAdapter(spinnerAdapter);
         spinner2.setAdapter(spinnerAdapter);
-
+        spinner1.setSelection(Language.Russian.ordinal());
+        spinner2.setSelection(Language.English.ordinal());
         SelectItemListener selectItemListener = new SelectItemListener();
         spinner1.setOnItemSelectedListener(selectItemListener);
         spinner2.setOnItemSelectedListener(selectItemListener);
-
-
-        String translation = null;
-        try {
-            Translate.setKey(ApiKeys.YANDEX_API_KEY);
-            translation = Translate.execute("The quick brown fox jumps over the lazy dog.", Language.English, Language.Russian);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        inputField = (EditText) view.findViewById(R.id.inputField);
         translatedText = (TextView) view.findViewById(R.id.translatedText);
-translatedText.setText(translation);
+        inputField = (EditText) view.findViewById(R.id.inputField);
+        checkBox = (CheckBox) view.findViewById(R.id.chbFavorite);
 
         inputField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -84,16 +85,13 @@ translatedText.setText(translation);
                 String s1 = inputField.getText().toString();
                 Language language1 = Language.values()[spinner1.getSelectedItemPosition()];
                 Language language2 = Language.values()[spinner2.getSelectedItemPosition()];
-
-                String translation = null;
-                try {
-                    Translate.setKey(ApiKeys.YANDEX_API_KEY);
-                     translation = Translate.execute("The quick brown fox jumps over the lazy dog.", Language.English, Language.Russian);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                translatedText.setText(translation);
-                // Прописываем то, что надо выполнить после изменения текста
+                checkBox.setChecked(false);
+                new AsyncRequest(language1, language2, s1).execute("");
+//                try {
+//                    Initializer.getWordDAO().insertWord(new Word(s1,translatedText.getText().toString(),language1.getCode(),language2.getCode()));
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
             }
 
             @Override
@@ -106,6 +104,30 @@ translatedText.setText(translation);
         });
 
 
+//        checkBox.setChecked(statusCheckBox);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            WordDAO wordDAO = Initializer.getWordDAO();
+                                            String s1 = inputField.getText().toString();
+                                            String s2 = translatedText.getText().toString();
+                                            Language language1 = Language.values()[spinner1.getSelectedItemPosition()];
+                                            Language language2 = Language.values()[spinner2.getSelectedItemPosition()];
+                                            try {
+                                                wordDAO.insertWordFavorite(new Word(s1, s2, language1.getCode(), language2.getCode()));
+                                                List<Word> favoriteAllPost = wordDAO.getFavoriteAllPost();
+                                                FavoritesFragment.remindListAdapter.setRemindDTOList(favoriteAllPost);
+                                                 FavoritesFragment.remindListAdapter.notifyDataSetChanged();
+
+
+                                            } catch (SQLException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    }
+        );
+
         return view;
     }
 
@@ -114,16 +136,45 @@ translatedText.setText(translation);
 
 
         @Override
-        public void onItemSelected(AdapterView<?> parent,
-                                   View itemSelected, int selectedItemPosition, long selectedId) {
-            String[] arrayString = Language.getNameList();
-            Toast toast = Toast.makeText(context,
-                    "Ваш выбор: " + arrayString[selectedItemPosition], Toast.LENGTH_SHORT);
-            toast.show();
+        public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
+            String s1 = inputField.getText().toString();
+            Language language1 = Language.values()[spinner1.getSelectedItemPosition()];
+            Language language2 = Language.values()[spinner2.getSelectedItemPosition()];
+            new AsyncRequest(language1, language2, s1).execute("");
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
+        }
+    }
+
+    class AsyncRequest extends AsyncTask<String, Integer, String> {
+
+        private Language language1;
+        private Language language2;
+        private String text;
+
+        public AsyncRequest(Language language1, Language language2, String text) {
+            this.language1 = language1;
+            this.language2 = language2;
+            this.text = text;
+        }
+
+        @Override
+        protected String doInBackground(String... arg) {
+            Translate.setKey(ApiKeys.YANDEX_API_KEY);
+            try {
+                return Translate.execute(text, language1, language2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "Здесь отобразится перевод...";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            translatedText.setText(s);
         }
     }
 }

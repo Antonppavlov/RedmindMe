@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Яндекс переводчик</string>
-    <string name="search_title">Search</string>
+    <string name="search_title">Поиск</string>
     <string name="reminders">Напоминания</string>
     <string name="favorites">Избранное</string>
     <string name="archive">Архив</string>
@@ -8,7 +8,7 @@
     <string name="reference">Справка</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="history">History</string>
+    <string name="history">История</string>
     <string name="ideas">Ideas</string>
     <string name="bitrhdays">Birthdays</string>
     <string name="todo">To do</string>
