@@ -18,23 +18,23 @@ import com.antonpavlov.redmindme.fragment.abstact.AbstractTabFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryFragment extends AbstractTabFragment {
+public class FavoritesFragment extends AbstractTabFragment {
 
-    private final static int LAYOUT = R.layout.history_fragment;
+    private final static int LAYOUT = R.layout.favorite_fragment;
 
     private Context context;
     private View view;
 
 
-    private static HistoryFragment historyFragment;
+    private static FavoritesFragment favoritesFragment;
 
-    public static HistoryFragment getInstance(Context context) {
-        historyFragment = new HistoryFragment();
-        historyFragment.context = context;
-        historyFragment.setTitle(context.getString(R.string.history));
+    public static FavoritesFragment getInstance(Context context) {
+        favoritesFragment = new FavoritesFragment();
+        favoritesFragment.context = context;
+        favoritesFragment.setTitle(context.getString(R.string.favorites));
 
 
-        return historyFragment;
+        return favoritesFragment;
     }
 
     @Nullable
@@ -53,11 +53,10 @@ public class HistoryFragment extends AbstractTabFragment {
     private List<RemindDTO> createMokeData() {
         List<RemindDTO> list = new ArrayList<>();
 
-        for (int i = 1; i <=  10; i++) {
+        for (int i = 1; i <= 10; i++) {
             list.add(new RemindDTO("Item " + i, "Description " + i));
         }
         return list;
     }
-
 
 }

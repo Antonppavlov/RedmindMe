@@ -12,13 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.antonpavlov.redmindme.adapter.TabsFragmentAdapter;
-import com.antonpavlov.redmindme.utils.Constant;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_main;
     private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -28,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
         initToolbar();
-        initNavigationView();
         initTabLayout();
     }
 
@@ -43,33 +40,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        toolbar.inflateMenu(R.menu.menu);
-    }
-
-    private void initNavigationView() {
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-
-        ActionBarDrawerToggle toggle =
-                new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
-
-        drawerLayout.setDrawerListener(toggle);
-        toggle.syncState();
-
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                drawerLayout.closeDrawers();
-                switch (item.getItemId()){
-                    case R.id.item_nav_menu_reminders:{
-                        showNotificationTab();
-                        break;
-                    }
-                }
-                return true;
-            }
-        });
     }
 
     private void  initTabLayout() {
@@ -80,8 +50,5 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    private void showNotificationTab() {
-        viewPager.setCurrentItem(Constant.TAB_TWO);
 
-    }
 }

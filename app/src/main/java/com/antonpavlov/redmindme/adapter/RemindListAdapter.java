@@ -41,6 +41,9 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
         return remindDTOList.size();
     }
 
+
+
+
     public static class RemindViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView textView;

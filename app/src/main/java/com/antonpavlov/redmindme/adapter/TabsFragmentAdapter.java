@@ -5,10 +5,9 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.antonpavlov.redmindme.fragment.BirthdaysFragment;
 import com.antonpavlov.redmindme.fragment.HistoryFragment;
-import com.antonpavlov.redmindme.fragment.IdeasFragment;
-import com.antonpavlov.redmindme.fragment.TodoFragment;
+import com.antonpavlov.redmindme.fragment.FavoritesFragment;
+import com.antonpavlov.redmindme.fragment.TranslatorFragment;
 import com.antonpavlov.redmindme.fragment.abstact.AbstractTabFragment;
 
 import java.util.HashMap;
@@ -23,10 +22,9 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
         super(fm);
         this.context = context;
         mapTab = new HashMap<>();
-        mapTab.put(0, HistoryFragment.getInstance(context));
-        mapTab.put(1, IdeasFragment.getInstance(context));
-        mapTab.put(2, TodoFragment.getInstance(context));
-        mapTab.put(3, BirthdaysFragment.getInstance(context));
+        mapTab.put(0, TranslatorFragment.getInstance(context));
+        mapTab.put(1, HistoryFragment.getInstance(context));
+        mapTab.put(2, FavoritesFragment.getInstance(context));
     }
 
     @Override
